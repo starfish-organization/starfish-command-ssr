@@ -17,7 +17,10 @@
     "babel-preset-es2017": "^6.24.1"
   },
   "dependencies": {
+    "@angular/platform-server": "^4.3.3",
     "babel-preset-stage-1": "^6.24.1",
+    "glob": "^7.1.2",
+    "js-yaml": "^3.9.1",
     "ramda": "^0.23.0"
   }
 }
