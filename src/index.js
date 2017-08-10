@@ -38,5 +38,20 @@ export default class StarFishCommandSSr {
       './dist-server/',
       ngFactoryFilePath
     )).AppServerModuleNgFactory;
+
+    const buildedPath = path.join(inputPath, buildedPath);
+
+    glob(path.join(buildedPath, '**/*.html'), function(err, files) {
+      files.forEach(file => {
+        const url = file.split(buildedPath)[1];
+        renderModuleFactory(AppServerModuleNgFactory, {
+          document: require('fs').readFileSync(file, 'utf8'),
+          url: '/'
+        }).then(html => {
+          console.log(file);
+          fs.writeFileSync(path.join(buildedPath, url), html);
+        });
+      });
+    });
   }
 }
