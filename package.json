@@ -2,7 +2,7 @@
   "name": "starfish-command-ssr",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "build/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "./node_modules/.bin/babel -d build/ src/",
@@ -17,10 +17,19 @@
     "babel-preset-es2017": "^6.24.1"
   },
   "dependencies": {
+    "@angular/animations": "^4.3.3",
+    "@angular/common": "^4.3.3",
+    "@angular/compiler": "^4.3.3",
+    "@angular/core": "^4.3.3",
+    "@angular/http": "^4.3.3",
+    "@angular/platform-browser": "^4.3.3",
     "@angular/platform-server": "^4.3.3",
+    "@angular/router": "^4.3.3",
     "babel-preset-stage-1": "^6.24.1",
     "glob": "^7.1.2",
     "js-yaml": "^3.9.1",
-    "ramda": "^0.23.0"
+    "ramda": "^0.23.0",
+    "rxjs": "^5.4.2",
+    "zone.js": "v0.8.14"
   }
 }

@@ -4,8 +4,9 @@ import yaml from 'js-yaml';
 import glob from 'glob';
 
 import 'zone.js/dist/zone-node';
-
 import { renderModuleFactory } from '@angular/platform-server';
+
+const TMPFILE = './temp.js';
 
 export default class StarFishCommandSSr {
   constructor() {
@@ -13,8 +14,13 @@ export default class StarFishCommandSSr {
     this.type = 'command';
   }
 
+  getName() {
+    return this.name;
+  }
+
   run(inputs, flags) {
-    const inputPath = path.resove(inputs[0]);
+    const inputPath = path.join(inputs[0]);
+
     if (!fs.statSync(inputPath).isDirectory()) {
       throw new Error('input path is not a directory');
     }
@@ -22,7 +28,9 @@ export default class StarFishCommandSSr {
       throw new Error('config.yaml file not found');
     }
 
-    const starfishConfigure = yaml.safeLoad(path.join(inputPath, 'config.yaml'), 'utf8');
+    const starfishConfigure = yaml.safeLoad(
+      fs.readFileSync(path.join(inputPath, 'config.yaml'), 'utf-8')
+    );
     const themePath = path.join(
       inputPath,
       starfishConfigure.STYLE.THEMEDIR,
@@ -33,25 +41,29 @@ export default class StarFishCommandSSr {
       .readdirSync(path.join(themePath, './dist-server/'))
       .filter(name => /^main.+.bundle.js$/.test(name))[0];
 
-    const AppServerModuleNgFactory = require(path.join(
-      themePath,
-      './dist-server/',
-      ngFactoryFilePath
-    )).AppServerModuleNgFactory;
+    fs.writeFileSync(
+      path.join(__dirname, TMPFILE),
+      fs.readFileSync(path.join(themePath, './dist-server/', ngFactoryFilePath), 'utf-8'),
+      'utf-8'
+    );
+    const AppServerModuleNgFactory = require(TMPFILE).AppServerModuleNgFactory;
 
-    const buildedPath = path.join(inputPath, buildedPath);
+    const buildedPath = path.join('.', 'build');
 
     glob(path.join(buildedPath, '**/*.html'), function(err, files) {
       files.forEach(file => {
         const url = file.split(buildedPath)[1];
+
         renderModuleFactory(AppServerModuleNgFactory, {
-          document: require('fs').readFileSync(file, 'utf8'),
-          url: '/'
+          document: fs.readFileSync(file, 'utf-8'),
+          url: url
         }).then(html => {
           console.log(file);
-          fs.writeFileSync(path.join(buildedPath, url), html);
+          fs.writeFileSync(path.join(buildedPath, url), html, 'utf-8');
         });
       });
+
+      fs.unlinkSync(path.join(__dirname, TMPFILE));
     });
   }
 }
