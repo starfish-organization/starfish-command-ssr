@@ -28,6 +28,7 @@ export default class StarFishCommandSSr {
       throw new Error('config.yaml file not found');
     }
 
+    // TODO configure 应该从主程序读入-> 传入constructor
     const starfishConfigure = yaml.safeLoad(
       fs.readFileSync(path.join(inputPath, 'config.yaml'), 'utf-8')
     );
@@ -39,7 +40,7 @@ export default class StarFishCommandSSr {
 
     const ngFactoryFilePath = fs
       .readdirSync(path.join(themePath, './dist-server/'))
-      .filter(name => /^main.+.bundle.js$/.test(name))[0];
+          .filter(name => /^main.+.bundle.js$/.test(name))[0];
 
     fs.writeFileSync(
       path.join(__dirname, TMPFILE),
@@ -50,10 +51,15 @@ export default class StarFishCommandSSr {
 
     const buildedPath = path.join('.', 'build');
 
-    glob(path.join(buildedPath, '**/*.html'), function(err, files) {
-      files.forEach(file => {
-        const url = file.split(buildedPath)[1];
+    const ignoreRegExp = new RegExp(starfishConfigure.SSR.IGNORE.map(regex => new RegExp(regex).source).join('|'));
 
+
+    glob(path.join(buildedPath, '**/*.html'), function(err, files) {
+
+      files.filter((file) => {
+        return !ignoreRegExp.test(file.replace(/^build/, ''));
+      }).forEach(file => {
+        const url = file.split(buildedPath)[1];
         renderModuleFactory(AppServerModuleNgFactory, {
           document: fs.readFileSync(file, 'utf-8'),
           url: url
