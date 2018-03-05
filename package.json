@@ -1,6 +1,6 @@
 {
   "name": "starfish-command-ssr",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "",
   "main": "build/index.js",
   "scripts": {
@@ -14,8 +14,7 @@
     "babel-cli": "^6.24.1",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-es2016": "^6.24.1",
-    "babel-preset-es2017": "^6.24.1",
-    "date-fns": "^2.0.0-alpha.7"
+    "babel-preset-es2017": "^6.24.1"
   },
   "dependencies": {
     "@angular/animations": "^4.3.3",
@@ -27,6 +26,7 @@
     "@angular/platform-server": "^4.3.3",
     "@angular/router": "^4.3.3",
     "babel-preset-stage-1": "^6.24.1",
+    "date-fns": "^2.0.0-alpha.7",
     "glob": "^7.1.2",
     "js-yaml": "^3.9.1",
     "ramda": "^0.23.0",
