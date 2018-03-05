@@ -66,7 +66,6 @@ export default class StarFishCommandSSr {
             document: fs.readFileSync(file, 'utf-8'),
             url: url
           }).then(html => {
-            console.log(file);
             fs.writeFileSync(path.join(buildedPath, url), html, 'utf-8');
           });
         });
